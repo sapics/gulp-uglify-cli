@@ -1,7 +1,7 @@
 {
   "name": "gulp-uglify-cli",
-  "version": "0.0.2",
-  "description": "Minify javascript by [UglifyJs2](https://github.com/mishoo/UglifyJS2) with gulp",
+  "version": "0.0.3",
+  "description": "Minify javascript by UglifyJs2 with gulp",
   "main": "index.js",
   "scripts": {
   },

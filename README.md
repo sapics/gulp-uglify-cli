@@ -26,11 +26,15 @@ gulp.task('minifyjs', function(){
 You can use all command line options in [UglifyJs2](https://github.com/mishoo/UglifyJS2#usage).
 
 - String command line option
-`uglify('-c -m --screw-ie8')`
+
+	`uglify('-c -m --screw-ie8')`
 
 - Array command line option
-`uglify(['-c', '-m', '--screw-ie8'])`
+
+	`uglify(['-c', '-m', '--screw-ie8'])`
 
 - Hash option
-`uglify({preCommand: 'license.js', command: '-c -m --screw-ie8', tmp: 'tmp.js'})`
-If you have an error 'Access Denied' in 'gulp-uglify-cli', please try to use `tmp` option.
+
+	`uglify({preCommand: 'license.js', command: '-c -m --screw-ie8', tmp: 'tmp.js'})`
+	
+	If you have an error 'Access Denied' in 'gulp-uglify-cli', please try to use `tmp` option.
