@@ -1,0 +1,25 @@
+{
+  "name": "gulp-uglify-cli",
+  "version": "0.0.2",
+  "description": "Minify javascript by [UglifyJs2](https://github.com/mishoo/UglifyJS2) with gulp",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sapics/gulp-uglify-cli.git"
+  },
+  "author": "sapics",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sapics/gulp-uglify-cli/issues"
+  },
+  "homepage": "https://github.com/sapics/gulp-uglify-cli",
+  "dependencies": {
+    "gulp-util": "^3.0.7",
+    "through2": "^2.0.1"
+  },
+  "keywords": [
+    "uglifyjs", "gulpplugin", "minify"
+  ]
+}
