@@ -6,42 +6,47 @@ var path = require('path')
 var fs = require('fs')
 var os = require('os')
 var PLUGIN_NAME = 'gulp-uglify-cli'
-
+var pk = Date.now()
 
 function minify(file, opts, cb){
   var command
   if(Array.isArray(opts) || typeof opts === 'string' || !opts){
-    command = (Array.isArray(opts) ? opts.join(' ') : opts) || ''
+    command = Array.isArray(opts) ? opts.join(' ') : opts || ''
     opts = {}
   } else {
-    command = (Array.isArray(opts.command) ? opts.command.join(' ') : opts.command) || ''
+    command = Array.isArray(opts.command) ? opts.command.join(' ')
+                                          : opts.command || ''
   }
 
-  var tmpPath = path.normalize(opts.tmp || path.join(os.tmpdir(), 'uglify-cli-tmp' + Date.now() + '.js'))
+  var tmpPath = path.normalize(opts.tmp
+    || path.join(os.tmpdir(), 'uglify-cli-' + (pk++) + '.js'))
 
   fs.writeFile(tmpPath, file.contents, function(err){
     if(err) return cb(new PluginError(PLUGIN_NAME, err))
 
     command = tmpPath + ' ' + command + ' -o ' + tmpPath
     if(opts.preCommand){
-      command = (Array.isArray(opts.preCommand) ? opts.preCommand.join(' ') : opts.preCommand)
+      command = (Array.isArray(opts.preCommand) ? opts.preCommand.join(' ')
+                                                : opts.preCommand)
                 + ' ' + command
     }
     exec('uglifyjs ' + command, function(err){
       if(err) {
-        if(!opts.tmp) fs.unlink(tmpPath)
         return cb(new PluginError(PLUGIN_NAME, err))
       }
 
       fs.readFile(tmpPath, function(err, data){
         if(err) {
-          if(!opts.tmp) fs.unlink(tmpPath)
           return cb(new PluginError(PLUGIN_NAME, err))
         }
 
         file.contents = data
+        if(!opts.tmp) {
+          setTimeout(function(){
+            fs.unlink(tmpPath)
+          }, 500)
+        }
         cb(null, file)
-        if(!opts.tmp) fs.unlink(tmpPath)
       })
     })
   })

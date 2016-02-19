@@ -1,6 +1,6 @@
 {
   "name": "gulp-uglify-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Minify javascript by UglifyJs2 with gulp",
   "main": "index.js",
   "scripts": {

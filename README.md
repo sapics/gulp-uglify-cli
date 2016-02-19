@@ -15,9 +15,9 @@ npm i gulp-uglify-cli --save-dev
 var uglify = require('gulp-uglify-cli')
 
 gulp.task('minifyjs', function(){
-	return gulp.src('index.js')
-	  .pipe(uglify())
-	  .pipe(gulp.dest('dist'))
+  return gulp.src('index.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('dist'))
 })
 ```
 
@@ -35,6 +35,8 @@ You can use all command line options in [UglifyJs2](https://github.com/mishoo/Ug
 
 - Hash option
 
-	`uglify({preCommand: 'license.js', command: '-c -m --screw-ie8', tmp: 'tmp.js'})`
-	
-	If you have an error 'Access Denied' in 'gulp-uglify-cli', please try to use `tmp` option.
+	`uglify({preCommand: 'license.js', command: '-c -m --screw-ie8'})`
+
+	If you have an error 'Permission Denied' in 'gulp-uglify-cli', please try to use `tmp` option which is accessible file path.
+
+	`uglify({command: '-c -m --screw-ie8', tmp: '_tmp.js'})`
