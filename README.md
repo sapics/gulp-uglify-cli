@@ -39,4 +39,4 @@ You can use all command line options in [UglifyJs2](https://github.com/mishoo/Ug
 
 	If you have an error 'Permission Denied' in 'gulp-uglify-cli', please try to use `tmp` option which is accessible file path.
 
-	`uglify({command: '-c -m --screw-ie8', tmp: '_tmp.js'})`
+	`uglify({command: '-c -m --screw-ie8', tmp: '/tmp/_tmp.js'})`

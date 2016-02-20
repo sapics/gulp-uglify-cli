@@ -5,62 +5,75 @@ var exec = require('child_process').exec
 var path = require('path')
 var fs = require('fs')
 var os = require('os')
-var PLUGIN_NAME = 'gulp-uglify-cli'
 var pk = Date.now()
 
-function minify(file, opts, cb){
-  var command
+const PLUGIN_NAME = 'gulp-uglify-cli'
+
+function createOptions(opts){
+  var command, options = {}
   if(Array.isArray(opts) || typeof opts === 'string' || !opts){
-    command = Array.isArray(opts) ? opts.join(' ') : opts || ''
+    command = opts
     opts = {}
   } else {
-    command = Array.isArray(opts.command) ? opts.command.join(' ')
-                                          : opts.command || ''
+    command = opts.command
   }
+  command = Array.isArray(command) ? command.join(' ') : command || ''
 
-  var tmpPath = path.normalize(opts.tmp
-    || path.join(os.tmpdir(), 'uglify-cli-' + (pk++) + '.js'))
+  options.tmpPath = path.normalize(opts.tmp ? opts.tmp
+    : path.join(os.tmpdir(), 'uglify-cli-' + (pk++) + '.js'))
+  options.command = 'uglifyjs ' + (opts.preCommand || '')  + ' '
+    + options.tmpPath + ' ' + command + ' -o ' + options.tmpPath
+  return options
+}
 
-  fs.writeFile(tmpPath, file.contents, function(err){
-    if(err) return cb(new PluginError(PLUGIN_NAME, err))
-
-    command = tmpPath + ' ' + command + ' -o ' + tmpPath
-    if(opts.preCommand){
-      command = (Array.isArray(opts.preCommand) ? opts.preCommand.join(' ')
-                                                : opts.preCommand)
-                + ' ' + command
+function minify(file, options, cb){
+  exec(options.command, function(err){
+    if(err) {
+      return cb(new PluginError(PLUGIN_NAME, err))
     }
-    exec('uglifyjs ' + command, function(err){
-      if(err) {
-        return cb(new PluginError(PLUGIN_NAME, err))
-      }
-
-      fs.readFile(tmpPath, function(err, data){
+    if(options.isBuffer){
+      fs.readFile(options.tmpPath, function(err, data){
         if(err) {
           return cb(new PluginError(PLUGIN_NAME, err))
         }
-
         file.contents = data
-        if(!opts.tmp) {
-          setTimeout(function(){
-            fs.unlink(tmpPath)
-          }, 500)
-        }
+        setTimeout(function(){
+          fs.unlink(options.tmpPath)
+        }, 5000)
         cb(null, file)
       })
-    })
+    } else {
+      file.contents = fs.createReadStream(options.tmpPath)
+      cb(null, file)
+    }
   })
 }
 
-module.exports = function(opts){
-  function transform(file, enc, cb){
-    if(file.isNull()){
-      return cb(null, file)
+module.exports = function uglifyCli(opts){
+  return through.obj(function(file, enc, cb){
+    if(file.isBuffer()){
+      var options = createOptions(opts)
+      fs.writeFile(options.tmpPath, file.contents, function(err){
+        if(err){
+          return cb(new PluginError(PLUGIN_NAME, err))
+        }
+        options.isBuffer = true
+        minify(file, options, cb)
+      })
+      return
     }
+
     if(file.isStream()){
-      return cb(new PluginError(PLUGIN_NAME, 'Streaming not supported'))
+      var options = createOptions(opts)
+      var writeStream = fs.createWriteStream(options.tmpPath)
+      writeStream.on('close', function(){
+        minify(file, options, cb)
+      })
+      writeStream.on('error', function(err){
+        cb(new PluginError(PLUGIN_NAME, err))
+      })
+      return file.contents.pipe(writeStream)
     }
-    minify(file, opts, cb)
-  }
-  return through.obj(transform)
+    cb(null, file)
+  })
 }
