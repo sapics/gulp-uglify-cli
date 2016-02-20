@@ -20,7 +20,7 @@ function createOptions(opts) {
   command = Array.isArray(command) ? command.join(' ') : command || ''
 
   options.tmpPath = path.normalize(opts.tmp ? opts.tmp
-    : path.join(os.tmpdir(), 'uglify-cli-' + (pk++) + '.js'))
+    : path.join(os.tmpdir(), 'uglify-' + (pk++).toString(36) + '.js'))
   options.command = 'uglifyjs '
     + (Array.isArray(opts.preCommand)
       ? opts.preCommand.join(' ') : opts.preCommand || '')
