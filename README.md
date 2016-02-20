@@ -5,8 +5,8 @@ Minify javascript by [UglifyJs2](https://github.com/mishoo/UglifyJS2) with gulp.
 ## Installation
 
 ```
-npm i uglify-js -g
-npm i gulp-uglify-cli --save-dev
+npm i -g uglify-js
+npm i --save-dev gulp-uglify-cli
 ```
 
 ## Usage
