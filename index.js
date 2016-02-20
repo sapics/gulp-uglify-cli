@@ -9,9 +9,9 @@ var pk = Date.now()
 
 const PLUGIN_NAME = 'gulp-uglify-cli'
 
-function createOptions(opts){
+function createOptions(opts) {
   var command, options = {}
-  if(Array.isArray(opts) || typeof opts === 'string' || !opts){
+  if (Array.isArray(opts) || typeof opts === 'string' || !opts) {
     command = opts
     opts = {}
   } else {
@@ -21,23 +21,25 @@ function createOptions(opts){
 
   options.tmpPath = path.normalize(opts.tmp ? opts.tmp
     : path.join(os.tmpdir(), 'uglify-cli-' + (pk++) + '.js'))
-  options.command = 'uglifyjs ' + (opts.preCommand || '')  + ' '
-    + options.tmpPath + ' ' + command + ' -o ' + options.tmpPath
+  options.command = 'uglifyjs '
+    + (Array.isArray(opts.preCommand)
+      ? opts.preCommand.join(' ') : opts.preCommand || '')
+    + ' ' + options.tmpPath + ' ' + command + ' -o ' + options.tmpPath
   return options
 }
 
-function minify(file, options, cb){
-  exec(options.command, function(err){
-    if(err) {
+function minify(file, options, cb) {
+  exec(options.command, function(err) {
+    if (err) {
       return cb(new PluginError(PLUGIN_NAME, err))
     }
-    if(options.isBuffer){
-      fs.readFile(options.tmpPath, function(err, data){
-        if(err) {
+    if (options.isBuffer) {
+      fs.readFile(options.tmpPath, function(err, data) {
+        if (err) {
           return cb(new PluginError(PLUGIN_NAME, err))
         }
         file.contents = data
-        setTimeout(function(){
+        setTimeout(function() {
           fs.unlink(options.tmpPath)
         }, 5000)
         cb(null, file)
@@ -49,12 +51,12 @@ function minify(file, options, cb){
   })
 }
 
-module.exports = function uglifyCli(opts){
-  return through.obj(function(file, enc, cb){
-    if(file.isBuffer()){
+module.exports = function uglifyCli(opts) {
+  return through.obj(function(file, enc, cb) {
+    if (file.isBuffer()) {
       var options = createOptions(opts)
-      fs.writeFile(options.tmpPath, file.contents, function(err){
-        if(err){
+      fs.writeFile(options.tmpPath, file.contents, function(err) {
+        if (err) {
           return cb(new PluginError(PLUGIN_NAME, err))
         }
         options.isBuffer = true
@@ -63,13 +65,13 @@ module.exports = function uglifyCli(opts){
       return
     }
 
-    if(file.isStream()){
+    if (file.isStream()) {
       var options = createOptions(opts)
       var writeStream = fs.createWriteStream(options.tmpPath)
-      writeStream.on('close', function(){
+      writeStream.on('close', function() {
         minify(file, options, cb)
       })
-      writeStream.on('error', function(err){
+      writeStream.on('error', function(err) {
         cb(new PluginError(PLUGIN_NAME, err))
       })
       return file.contents.pipe(writeStream)
