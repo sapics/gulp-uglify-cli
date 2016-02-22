@@ -1,6 +1,6 @@
 # gulp-uglify-cli  [![NPM version](https://badge.fury.io/js/gulp-uglify-cli.svg)](https://badge.fury.io/js/gulp-uglify-cli)
 
-Minify javascript by [UglifyJs2](https://github.com/mishoo/UglifyJS2) with [gulp](https://github.com/gulpjs/gulp).
+Minify javascript by [UglifyJs2](https://github.com/mishoo/UglifyJS2) with command line options for [gulp](https://github.com/gulpjs/gulp).
 
 ## Installation
 
