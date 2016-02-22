@@ -9,23 +9,35 @@ var pk = Date.now()
 
 const PLUGIN_NAME = 'gulp-uglify-cli'
 
-function createOptions(opts) {
+function getCommandString(command) {
+  command = Array.isArray(command) ? command.join(' ') : command
+  return command ? ' ' + command.trim() + ' ' : ' '
+}
+
+function _createOptions(opts){
   var command, options = {}
   if (Array.isArray(opts) || typeof opts === 'string' || !opts) {
     command = opts
     opts = {}
   } else {
+    for (var k in opts) {
+      options[k] = opts[k]
+    }
     command = opts.command
   }
-  command = Array.isArray(command) ? command.join(' ') : command || ''
 
-  options.tmpPath = path.normalize(opts.tmp ? opts.tmp
-    : path.join(os.tmpdir(), 'uglify-' + (pk++).toString(36) + '.js'))
-  options.command = 'uglifyjs '
-    + (Array.isArray(opts.preCommand)
-      ? opts.preCommand.join(' ') : opts.preCommand || '')
-    + ' ' + options.tmpPath + ' ' + command + ' -o ' + options.tmpPath
+  options.command = getCommandString(command)
+  options.preCommand = getCommandString(opts.preCommand)
   return options
+}
+
+function createOptions(opts) {
+  var tmpPath = path.normalize(opts.tmp ? opts.tmp
+    : path.join(os.tmpdir(), 'uglify-' + (pk++).toString(36) + '.js'))
+  return {tmpPath: tmpPath,
+          command: 'uglifyjs' + opts.preCommand + tmpPath + opts.command
+                     + '-o ' + tmpPath
+         }
 }
 
 function minify(file, options, cb) {
@@ -52,9 +64,10 @@ function minify(file, options, cb) {
 }
 
 module.exports = function uglifyCli(opts) {
+  var _options = _createOptions(opts)
   return through.obj(function(file, enc, cb) {
+    var options = createOptions(_options)
     if (file.isBuffer()) {
-      var options = createOptions(opts)
       fs.writeFile(options.tmpPath, file.contents, function(err) {
         if (err) {
           return cb(new PluginError(PLUGIN_NAME, err))
@@ -66,7 +79,6 @@ module.exports = function uglifyCli(opts) {
     }
 
     if (file.isStream()) {
-      var options = createOptions(opts)
       var writeStream = fs.createWriteStream(options.tmpPath)
       writeStream.on('close', function() {
         minify(file, options, cb)
