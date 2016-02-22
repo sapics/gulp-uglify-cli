@@ -21,4 +21,34 @@ describe('command', function() {
     })
   })
 
+  it('array command with comments', function(done) {
+    // create the fake file
+    var fakeFile = new File({
+      contents: new Buffer(testData.code)
+    })
+    var uglifyStream = uglifyCli(['--comments', 'all'])
+    uglifyStream.write(fakeFile)
+    uglifyStream.once('data', function(file) {
+      assert(file.isBuffer())
+      // check the contents
+      assert.equal(file.contents.toString('utf8').replace(';', ''), testData.minifiedCodeWithComments)
+      done()
+    })
+  })
+
+  it('hash command with comments', function(done) {
+    // create the fake file
+    var fakeFile = new File({
+      contents: new Buffer(testData.code)
+    })
+    var uglifyStream = uglifyCli({command: '--comments all'})
+    uglifyStream.write(fakeFile)
+    uglifyStream.once('data', function(file) {
+      assert(file.isBuffer())
+      // check the contents
+      assert.equal(file.contents.toString('utf8').replace(';', ''), testData.minifiedCodeWithComments)
+      done()
+    })
+  })
+
 })
