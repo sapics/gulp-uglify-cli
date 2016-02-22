@@ -4,7 +4,7 @@ var File = require('gulp-util').File
 var uglifyCli = require('../')
 var testData = require('./test-data')
 
-describe('gulp-uglify-cli', function() {
+describe('input file mode', function() {
 
   it('stream mode', function(done) {
     // create the fake file
