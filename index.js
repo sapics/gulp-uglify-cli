@@ -34,9 +34,11 @@ function _createOptions(opts){
 function createOptions(opts) {
   var tmpPath = path.normalize(opts.tmp ? opts.tmp
     : path.join(os.tmpdir(), 'uglify-' + (pk++).toString(36) + '.js'))
+  var outputPath = opts.output || tmpPath
   return {tmpPath: tmpPath,
+          outputPath: outputPath,
           command: 'uglifyjs' + opts.preCommand + tmpPath + opts.command
-                     + '-o ' + tmpPath
+                     + '-o ' + outputPath
          }
 }
 
@@ -46,7 +48,7 @@ function minify(file, options, cb) {
       return cb(new PluginError(PLUGIN_NAME, err))
     }
     if (options.isBuffer) {
-      fs.readFile(options.tmpPath, function(err, data) {
+      fs.readFile(options.outputPath, function(err, data) {
         if (err) {
           return cb(new PluginError(PLUGIN_NAME, err))
         }
@@ -57,7 +59,7 @@ function minify(file, options, cb) {
         cb(null, file)
       })
     } else {
-      file.contents = fs.createReadStream(options.tmpPath)
+      file.contents = fs.createReadStream(options.outputPath)
       cb(null, file)
     }
   })

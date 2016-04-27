@@ -37,6 +37,10 @@ You can use all command line options in [UglifyJs2](https://github.com/mishoo/Ug
 
 	`uglify({preCommand: 'license.js', command: '-c -m --screw-ie8'})`
 
+	By setting `output` option, you can output file directly.
+
+	`uglify({command: '-c -m --screw-ie8', output: '/home/test/output.js'})`
+
 	If you have an error 'Permission Denied' in 'gulp-uglify-cli', please try to use `tmp` option which is accessible file path.
 
 	`uglify({command: '-c -m --screw-ie8', tmp: '/tmp/_tmp.js'})`
