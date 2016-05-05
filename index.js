@@ -37,7 +37,7 @@ function createOptions(opts) {
   var outputPath = opts.output || tmpPath
   return {tmpPath: tmpPath,
           outputPath: outputPath,
-          command: 'uglifyjs' + opts.preCommand + tmpPath + opts.command
+          command: (opts.uglifyjs || 'uglifyjs') + opts.preCommand + tmpPath + opts.command
                      + '-o ' + outputPath
          }
 }
