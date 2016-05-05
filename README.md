@@ -39,8 +39,12 @@ You can use all command line options in [UglifyJs2](https://github.com/mishoo/Ug
 
 	By setting `output` option, you can output file directly.
 
-	`uglify({command: '-c -m --screw-ie8', output: '/home/test/output.js'})`
+	`uglify({command: '-c', output: '/home/test/output.js'})`
+
+	By setting `uglifyjs` option, you can use custom uglifyjs path.
+
+	`uglify({command: '-c', uglifyjs: '/home/node_nodules/.bin/uglifyjs'})`	
 
 	If you have an error 'Permission Denied' in 'gulp-uglify-cli', please try to use `tmp` option which is accessible file path.
 
-	`uglify({command: '-c -m --screw-ie8', tmp: '/tmp/_tmp.js'})`
+	`uglify({command: '-c', tmp: '/tmp/_tmp.js'})`
