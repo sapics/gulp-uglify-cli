@@ -43,7 +43,7 @@ You can use all command line options in [UglifyJs2](https://github.com/mishoo/Ug
 
 	By setting `uglifyjs` option, you can use custom uglifyjs path.
 
-	`uglify({command: '-c', uglifyjs: '/home/node_nodules/.bin/uglifyjs'})`	
+	`uglify({command: '-c', uglifyjs: '/home/node_modules/.bin/uglifyjs'})`	
 
 	If you have an error 'Permission Denied' in 'gulp-uglify-cli', please try to use `tmp` option which is accessible file path.
 
