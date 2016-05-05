@@ -5,17 +5,12 @@ var exec = require('child_process').exec
 var path = require('path')
 var fs = require('fs')
 var os = require('os')
-var randomBytes = require('crypto').randomBytes
 
 const PLUGIN_NAME = 'gulp-uglify-cli'
 
 function getCommandString(command) {
   command = Array.isArray(command) ? command.join(' ') : command
   return command ? ' ' + command.trim() + ' ' : ' '
-}
-
-function randomHex(){
-	return randomBytes(64).toString('hex')
 }
 
 function _createOptions(opts){
@@ -35,13 +30,17 @@ function _createOptions(opts){
   return options
 }
 
+var tmpFileName = 'uglify-' + require('crypto').randomBytes(64).toString('hex')
+                  + '-'
+var pk = 0
 function createOptions(opts) {
   var tmpPath = path.normalize(opts.tmp ? opts.tmp
-    : path.join(os.tmpdir(), 'uglify-' + randomHex() + '.js'))
+    : path.join(os.tmpdir(), tmpFileName + (pk++) + '.js'))
   var outputPath = opts.output || tmpPath
   return {tmpPath: tmpPath,
           outputPath: outputPath,
-          command: (opts.uglifyjs || 'uglifyjs') + opts.preCommand + tmpPath + opts.command
+          command: (opts.uglifyjs || 'uglifyjs') + opts.preCommand
+                     + tmpPath + opts.command
                      + '-o ' + outputPath
          }
 }
