@@ -30,12 +30,12 @@ function _createOptions(opts){
   return options
 }
 
-var tmpFileName = 'uglify-' + require('crypto').randomBytes(64).toString('hex')
+var pk = Date.now()
+var tmpFileName = 'uglify-' + require('crypto').randomBytes(16).toString('hex')
                   + '-'
-var pk = 0
 function createOptions(opts) {
   var tmpPath = path.normalize(opts.tmp ? opts.tmp
-    : path.join(os.tmpdir(), tmpFileName + (pk++) + '.js'))
+    : path.join(os.tmpdir(), tmpFileName + (pk++).toString(36) + '.js'))
   var outputPath = opts.output || tmpPath
   return {tmpPath: tmpPath,
           outputPath: outputPath,
