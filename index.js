@@ -1,9 +1,9 @@
-var through = require('through2')
-var PluginError = require('plugin-error')
-var exec = require('child_process').exec
-var path = require('path')
-var fs = require('fs')
-var os = require('os')
+const through = require('through2')
+const PluginError = require('plugin-error')
+const exec = require('child_process').exec
+const path = require('path')
+const fs = require('fs')
+const os = require('os')
 
 const PLUGIN_NAME = 'gulp-uglify-cli'
 
