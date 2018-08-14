@@ -1,6 +1,6 @@
 var assert = require('assert')
 var es = require('event-stream')
-var File = require('gulp-util').File
+var File = require('vinyl')
 var uglifyCli = require('../')
 var testData = require('./test-data')
 var os = require('os')
