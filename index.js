@@ -1,6 +1,5 @@
 var through = require('through2')
-var gutil = require('gulp-util')
-var PluginError = gutil.PluginError
+var PluginError = require('plugin-error')
 var exec = require('child_process').exec
 var path = require('path')
 var fs = require('fs')
